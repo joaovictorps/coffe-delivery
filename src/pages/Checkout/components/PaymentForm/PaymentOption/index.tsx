@@ -1,8 +1,9 @@
+import { PaymentMethod } from "../../../../../interfaces/formTypes";
 import { PaymentOptionContainer } from "./styles";
 
 interface PaymentOptionProps {
     icon: React.ReactNode;
-    name: string;
+    name: PaymentMethod;
     isSelected?: boolean;
     onClick: () => void;
 }

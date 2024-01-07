@@ -1,10 +1,10 @@
 import React, { ReactNode, createContext, useReducer, useEffect } from "react";
 import { CartContextType, ProductType } from "../interfaces/cartTypes";
-import { FormContextType, FormDataType } from "../interfaces/formTypes";
+import { FormContextType, FormDataType, PaymentMethod } from "../interfaces/formTypes";
 import { cartReducer } from "../reducers/cart/reducer";
 import { formReducer } from "../reducers/form/reducer";
 import { addToCartAction, changeProductQuantityAction, removeFromCartAction } from "../reducers/cart/actions";
-import { changeAddressAction } from "../reducers/form/actions";
+import { changeAddressAction, changePaymentMethodAction } from "../reducers/form/actions";
 import { saveToLocalStorage, loadFromLocalStorage } from "../utils/localStorage";
 
 export const OrderContext = createContext({} as OrderContextType);
@@ -18,17 +18,12 @@ interface OrderContextProviderProps {
   children: ReactNode;
 }
 
-interface InitialFormStateType {
-  data: FormDataType;
-  changeFormData: (inputName: string, value: string) => void;
-}
-
 export const OrderContextProvider = ({ children }: OrderContextProviderProps) => {
   const initialCartState: CartContextType = loadFromLocalStorage('cartData', {
     products: [],
   }) as CartContextType;
 
-  const initialFormState: InitialFormStateType = {
+  const initialFormState = {
     data: loadFromLocalStorage('formData', {
       address: {
         street: "",
@@ -38,9 +33,7 @@ export const OrderContextProvider = ({ children }: OrderContextProviderProps) =>
         city: "",
         state: "",
       },
-      paymentMethodSelected: {
-        name: "",
-      },
+      paymentMethodSelected: "Cartão de crédito",
     }),
   } as FormContextType;
 
@@ -72,6 +65,10 @@ export const OrderContextProvider = ({ children }: OrderContextProviderProps) =>
     formDispatch(changeAddressAction({ inputName, value }));
   };
 
+  const changePaymentMethod = (paymentSelected: PaymentMethod) => {
+    formDispatch(changePaymentMethodAction(paymentSelected))
+  }
+
   useEffect(() => {
     saveToLocalStorage('cartData', cartState);
     saveToLocalStorage('formData', formState.data);
@@ -87,6 +84,7 @@ export const OrderContextProvider = ({ children }: OrderContextProviderProps) =>
     form: {
       data: formState.data,
       changeFormData,
+      changePaymentMethod
     }
   };
 

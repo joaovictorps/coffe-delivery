@@ -1,20 +1,36 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { Bank, CreditCard, CurrencyDollar, Money } from 'phosphor-react';
 import { GroupContainer, HeaderGroup } from '../../styles';
 import { PaymentOption } from './PaymentOption';
 import { PaymentMethodsList } from './styles';
+import { PaymentMethod } from '../../../../interfaces/formTypes';
+import { OrderContext } from '../../../../contexts/OrderContext';
 
-const paymentOptions = [
+interface OptionType {
+  id: string;
+  icon: JSX.Element;
+  name: PaymentMethod;
+}
+
+const paymentOptions: OptionType[] = [
   { id: 'creditCard', icon: <CreditCard size={16} weight="thin" />, name: 'Cartão de crédito' },
   { id: 'debitCard', icon: <Bank size={16} weight="thin" />, name: 'Cartão de débito' },
   { id: 'cash', icon: <Money size={16} weight="thin" />, name: 'Dinheiro' },
 ];
 
 export function PaymentForm() {
-  const [selectedOption, setSelectedOption] = useState("creditCard");
+  const [selectedOption, setSelectedOption] = useState<PaymentMethod>('Cartão de crédito');
 
-  const handleOptionClick = (id: string) => {
-    setSelectedOption(id);
+  const {  form } = useContext(OrderContext);
+
+  const {changePaymentMethod} = form
+
+  const handleOptionClick = (name: PaymentMethod) => {
+
+    if(name == selectedOption) return;
+    
+    setSelectedOption(name);
+    changePaymentMethod(name);
   };
 
   return (
@@ -28,13 +44,13 @@ export function PaymentForm() {
       </HeaderGroup>
 
       <PaymentMethodsList className="payment-methods">
-        {paymentOptions.map((option) => (
+        {paymentOptions.map((option: OptionType) => (
           <li key={option.id}>
             <PaymentOption
               icon={option.icon}
               name={option.name}
-              isSelected={selectedOption === option.id}
-              onClick={() => handleOptionClick(option.id)}
+              isSelected={selectedOption === option.name}
+              onClick={() => handleOptionClick(option.name)}
             />
           </li>
         ))}

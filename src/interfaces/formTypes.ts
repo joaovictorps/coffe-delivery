@@ -6,18 +6,17 @@ export interface AddressType {
     city: string;
     state: string;
     neighborhood: string;
-}
+  }
 
-export interface PaymentMethodType {
-    name: string;
-}
-
-export interface FormDataType {
+  export type PaymentMethod = 'Cartão de crédito' | 'Cartão de débito' | 'Dinheiro';
+  
+  export interface FormDataType {
     address: AddressType;
-    paymentMethodSelected: PaymentMethodType;
-}
-
-export interface FormContextType {
+    paymentMethodSelected: PaymentMethod;
+  }
+  
+  export interface FormContextType {
     data: FormDataType;
     changeFormData: (inputName: string, value: string) => void;
-}
+    changePaymentMethod: (paymentMethod: PaymentMethod) => void;
+  }
