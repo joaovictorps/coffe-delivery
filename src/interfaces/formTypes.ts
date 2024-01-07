@@ -5,23 +5,19 @@ export interface AddressType {
     complement?: string;
     city: string;
     state: string;
+    neighborhood: string;
 }
 
 export interface PaymentMethodType {
     name: string;
 }
 
-export interface ClientType {
-    name: string;
-}
-
 export interface FormDataType {
     address: AddressType;
     paymentMethodSelected: PaymentMethodType;
-    client: ClientType;
 }
 
 export interface FormContextType {
     data: FormDataType;
-    changeFormData: () => void;
+    changeFormData: (inputName: string, value: string) => void;
 }

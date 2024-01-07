@@ -1,29 +1,31 @@
 import { useContext } from "react";
 import productImage1 from "../../../../assets/product-image-1.png";
 import { SelectOption } from "../../../../components/SelectOption";
-import { CartContext } from "../../../../contexts/OrderContext";
+import { OrderContext } from "../../../../contexts/OrderContext";
 import { ProductInCart } from "../../../../interfaces/cartTypes";
 import { formatPrice } from "../../../../utils/useUtils";
 import { MinicartCardContainer } from "./styles";
 import { Trash } from "phosphor-react";
 
 export function MinicartCard({product, quantity}: ProductInCart) {
-    const { AddToCart, RemoveFromCart, ChangeProductQuantityInCart } = useContext(CartContext);
+    const { cart } = useContext(OrderContext);
+
+    const { addToCart, removeFromCart, changeProductQuantityInCart } = cart
 
     const { name, price } = product
 
     const handleIncrementOne = () => {
-        AddToCart(product);
+        addToCart(product);
     }
 
     const handleDecrementOne = () => {
-        RemoveFromCart(product, 1);
+        removeFromCart(product, 1);
     }
 
     const handleQuantityChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const newQuantity = Number(event.target.value);
 
-        ChangeProductQuantityInCart(product, newQuantity);
+        changeProductQuantityInCart(product, newQuantity);
     };
 
     return (
@@ -40,7 +42,7 @@ export function MinicartCard({product, quantity}: ProductInCart) {
                             handleChange={handleQuantityChange}
                             handleBlur={handleQuantityChange}
                         />
-                        <button className="remove-product" type="button" onClick={() => RemoveFromCart(product)} title="Remover produto">
+                        <button className="remove-product" type="button" onClick={() => removeFromCart(product)} title="Remover produto">
                             <Trash size={16} />
                             REMOVER
                         </button>

@@ -1,32 +1,31 @@
-// import { CheckoutContainer, GroupContainer } from "./styles";
-// import { Minicart } from "./components/Minicart";
-// import { AddressForm } from "./components/AddressForm";
-// import { PaymentForm } from "./components/PaymentForm";
+import { CheckoutContainer, GroupContainer } from "./styles";
+import { Minicart } from "./components/Minicart";
+import { AddressForm } from "./components/AddressForm";
+import { PaymentForm } from "./components/PaymentForm";
 
 export function Checkout() {
 
-    return <h1>Olá mundo</h1>
-    // return (
-    //     <CheckoutContainer>
-    //         <form>
-    //             <fieldset>
-    //                 <legend>Complete seu pedido</legend>
+    return (
+        <CheckoutContainer>
+            <form>
+                <fieldset>
+                    <legend>Complete seu pedido</legend>
 
-    //                 {/* <AddressForm />
+                    <AddressForm />
 
-    //                 <PaymentForm /> */}
+                    <PaymentForm />
                     
-    //             </fieldset>
+                </fieldset>
 
-    //             <fieldset className="resume-cart">
-    //                 <legend>Cafés selecionados</legend>
+                <fieldset className="resume-cart">
+                    <legend>Cafés selecionados</legend>
 
-    //                 <GroupContainer className="resume-cart">
-    //                     {/* <Minicart /> */}
-    //                     <button className='submit-button' type='submit'>CONFIRMAR PEDIDO</button>
-    //                 </GroupContainer>
-    //             </fieldset>
-    //         </form>
-    //     </CheckoutContainer>
-    // )
+                    <GroupContainer className="resume-cart">
+                        <Minicart />
+                        <button className='submit-button' type='submit'>CONFIRMAR PEDIDO</button>
+                    </GroupContainer>
+                </fieldset>
+            </form>
+        </CheckoutContainer>
+    )
 }

@@ -1,11 +1,11 @@
-import { ReactNode, createContext, useReducer, useEffect } from "react";
+import React, { ReactNode, createContext, useReducer, useEffect } from "react";
 import { CartContextType, ProductType } from "../interfaces/cartTypes";
 import { FormContextType, FormDataType } from "../interfaces/formTypes";
 import { cartReducer } from "../reducers/cart/reducer";
 import { formReducer } from "../reducers/form/reducer";
 import { addToCartAction, changeProductQuantityAction, removeFromCartAction } from "../reducers/cart/actions";
-import { loadFromLocalStorage, saveToLocalStorage } from "../utils/localStorage";
-import { FormActionAddressPayload, changeAddressAction } from "../reducers/form/actions";
+import { changeAddressAction } from "../reducers/form/actions";
+import { saveToLocalStorage, loadFromLocalStorage } from "../utils/localStorage";
 
 export const OrderContext = createContext({} as OrderContextType);
 
@@ -18,13 +18,18 @@ interface OrderContextProviderProps {
   children: ReactNode;
 }
 
+interface InitialFormStateType {
+  data: FormDataType;
+  changeFormData: (inputName: string, value: string) => void;
+}
+
 export const OrderContextProvider = ({ children }: OrderContextProviderProps) => {
   const initialCartState: CartContextType = loadFromLocalStorage('cartData', {
     products: [],
   }) as CartContextType;
 
-  const initialFormState: FormContextType = {
-    data: {
+  const initialFormState: InitialFormStateType = {
+    data: loadFromLocalStorage('formData', {
       address: {
         street: "",
         postalCode: "",
@@ -36,23 +41,17 @@ export const OrderContextProvider = ({ children }: OrderContextProviderProps) =>
       paymentMethodSelected: {
         name: "",
       },
-      client: {
-        name: ""
-      },
-    },
-    changeFormData: () => {},
-  };
+    }),
+  } as FormContextType;
 
   const [cartState, cartDispatch] = useReducer(
     cartReducer,
-    initialCartState,
-    (state: CartContextType) => state
+    initialCartState
   );
 
   const [formState, formDispatch] = useReducer(
     formReducer,
-    initialFormState,
-    (state: FormContextType) => state
+    initialFormState
   );
 
   const { products } = cartState;
@@ -69,15 +68,14 @@ export const OrderContextProvider = ({ children }: OrderContextProviderProps) =>
     cartDispatch(changeProductQuantityAction(product, quantity));
   };
 
-  const handleChangeAddress = (data: FormActionAddressPayload) => {
-    // formDispatch(changeAddressAction(data));
-
-    console.log(data);
+  const changeFormData = (inputName: string, value: string) => {
+    formDispatch(changeAddressAction({ inputName, value }));
   };
 
   useEffect(() => {
     saveToLocalStorage('cartData', cartState);
-  }, [cartState]);
+    saveToLocalStorage('formData', formState.data);
+  }, [cartState, formState]);
 
   const orderContextValue: OrderContextType = {
     cart: {
@@ -88,7 +86,7 @@ export const OrderContextProvider = ({ children }: OrderContextProviderProps) =>
     },
     form: {
       data: formState.data,
-      changeFormData: formState.changeFormData,
+      changeFormData,
     }
   };
 

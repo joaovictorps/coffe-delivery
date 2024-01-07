@@ -1,15 +1,23 @@
+// reducer.ts
 import { FormContextType } from "../../interfaces/formTypes";
-import { FormAction } from "./actions";
+import { FormActionTypes, FormAddressAction } from "./actions";
 
-export function formReducer(state: FormContextType, action: FormAction): FormContextType {
+export function formReducer(state: FormContextType, action: FormAddressAction): FormContextType {
   switch (action.type) {
-    case "CHANGE_ADDRESS": {
+    case FormActionTypes.CHANGE_ADDRESS:
+      const { inputName, value } = action.payload;
 
-      console.log('change_address');     
       console.log(state);
-
-    }
-    
+      return {
+        ...state,
+        data: {
+          ...state.data,
+          address: {
+            ...state.data.address,
+            [inputName]: value,
+          },
+        },
+      };
     default:
       return state;
   }

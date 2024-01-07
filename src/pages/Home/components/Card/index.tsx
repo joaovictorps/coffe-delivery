@@ -1,20 +1,22 @@
 import { ShoppingCart } from "phosphor-react";
 import productImage1 from "../../../../assets/product-image-1.png";
 import { CardContainer } from "./styles";
-import { CartContext } from "../../../../contexts/OrderContext";
+import { OrderContext } from "../../../../contexts/OrderContext";
 import { FormEvent, useContext, useState } from "react";
 import { ProductType } from "../../../../interfaces/cartTypes";
 import { formatPrice } from "../../../../utils/useUtils";
 import { SelectOption } from "../../../../components/SelectOption";
 
 export function Card(item: ProductType) {
-    const { AddToCart } = useContext(CartContext);
+    const { cart } = useContext(OrderContext);
+
+    const { addToCart } = cart
 
     const [quantity, setQuantity] = useState(1);
 
     const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        AddToCart(item, quantity);
+        addToCart(item, quantity);
     };
 
     const handleQuantityChange = (event: React.ChangeEvent<HTMLInputElement>) => {

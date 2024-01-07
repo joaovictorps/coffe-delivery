@@ -1,11 +1,13 @@
 import { useContext } from "react"
-import { CartContext } from "../../../../contexts/OrderContext"
+import { OrderContext } from "../../../../contexts/OrderContext"
 import { MinicartCard } from "../MinicartCard";
 import { MinicartContainer, MinicartList, MinicartSummary } from "./styles";
 import { formatPrice } from "../../../../utils/useUtils";
 
 export function Minicart() {
-    const { products } = useContext(CartContext);
+    const { cart } = useContext(OrderContext);
+
+    const { products } = cart;
 
     const totalProductValue = products.reduce((acc, cur) => acc + (cur.product.price * cur.quantity), 0)
     const freightValue = 3.5;
